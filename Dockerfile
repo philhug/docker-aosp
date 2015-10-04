@@ -24,10 +24,13 @@ ADD https://commondatastorage.googleapis.com/git-repo-downloads/repo /usr/local/
 RUN chmod 755 /usr/local/bin/*
 
 # All builds will be done by user aosp
-RUN useradd --create-home aosp
+RUN useradd --create-home aosp && echo "aosp:aosp" | chpasswd && adduser aosp sudo
 ADD gitconfig /home/aosp/.gitconfig
 ADD ssh_config /home/aosp/.ssh/config
 RUN chown aosp:aosp /home/aosp/.gitconfig
+
+RUN mkdir -p /tmp/ccache /aosp
+RUN chown aosp:aosp /tmp/ccache /aosp
 
 # The persistent data will be in these two directories, everything else is
 # considered to be ephemeral
